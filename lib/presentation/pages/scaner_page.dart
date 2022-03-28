@@ -39,9 +39,10 @@ class _ScannerPageState extends State<ScannerPage> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text(
-          "Scan",
+          "Scaning",
           style: primaryTextStyle.copyWith(
             color: Colors.black,
+            fontWeight: FontWeight.bold,
           ),
         ),
         centerTitle: true,
@@ -97,6 +98,7 @@ class _ScannerPageState extends State<ScannerPage> {
                       "Tekan Untuk Scan",
                       style: primaryTextStyle.copyWith(
                         color: Colors.white,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),

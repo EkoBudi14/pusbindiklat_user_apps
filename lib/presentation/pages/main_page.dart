@@ -7,6 +7,8 @@ import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:pusbindiklat_global/presentation/pages/date_page.dart';
 import 'package:pusbindiklat_global/presentation/pages/home_page.dart';
 import 'package:pusbindiklat_global/presentation/pages/scaner_page.dart';
+import 'package:pusbindiklat_global/presentation/pages/sign_in_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MainPage extends StatefulWidget {
   @override
@@ -17,12 +19,27 @@ class _MainPageState extends State<MainPage>
     with SingleTickerProviderStateMixin {
   String title = 'BottomNavigationBar';
 
+  SharedPreferences sharedPreferences;
+
   TabController _tabController;
 
   @override
   void initState() {
     super.initState();
+    // checkLoginStatus();
+
     _tabController = TabController(length: 3, vsync: this);
+  }
+
+  checkLoginStatus() async {
+    sharedPreferences = await SharedPreferences.getInstance();
+    if (sharedPreferences.getString("token") == null &&
+        sharedPreferences.getString("emailUser") == null &&
+        sharedPreferences.getString("password") == null) {
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (BuildContext context) => SignInPage()),
+          (Route<dynamic> route) => false);
+    }
   }
 
   @override

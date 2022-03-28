@@ -1,9 +1,119 @@
 // ignore_for_file: use_key_in_widget_constructors, avoid_unnecessary_containers, prefer_const_constructors
 
-import 'package:flutter/material.dart';
-import 'package:pusbindiklat_global/styles/style.dart';
+import 'dart:convert';
 
-class SignInPage extends StatelessWidget {
+import 'package:flutter/material.dart';
+import 'package:pusbindiklat_global/presentation/pages/home_page.dart';
+import 'package:pusbindiklat_global/presentation/pages/main_page.dart';
+import 'package:pusbindiklat_global/styles/style.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
+
+class SignInPage extends StatefulWidget {
+  @override
+  State<SignInPage> createState() => _SignInPageState();
+}
+
+class _SignInPageState extends State<SignInPage> {
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  String emailUsers = '';
+  String passwords = '';
+  String tokens = '';
+  String idUsers = '';
+
+  bool isLoggedIn = false;
+
+  @override
+  void initState() {
+    super.initState();
+    autoLogIn();
+  }
+
+  void autoLogIn() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String emailUser = prefs.getString('emailUser');
+    final String password = prefs.getString('password');
+    final String token = prefs.getString('token');
+
+    if (emailUser != null && password != null && token != null) {
+      setState(() {
+        isLoggedIn = true;
+        emailUsers = emailUser;
+        passwords = password;
+        tokens = token;
+      });
+      Navigator.push(context, MaterialPageRoute(builder: (_) => MainPage()));
+      return;
+    }
+  }
+
+  Future<Null> logout() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    var res = await http.post(
+      Uri.parse('http://10.0.2.2:8000/api/logout-api'),
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer ${prefs.getString('token')}"
+      },
+    );
+
+    if (res.statusCode != 200) {
+      return null;
+    }
+
+    final data = json.decode(res.body);
+
+    prefs.setString('emailUser', '');
+    prefs.setString('password', '');
+    prefs.setString('token', '');
+
+    setState(() {
+      emailUsers = '';
+      passwords = '';
+      tokens = '';
+      isLoggedIn = false;
+    });
+    print(data);
+    return data;
+  }
+
+  Future<Null> loginUser() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    var res = await http.post(
+      Uri.parse('http://10.0.2.2:8000/api/login-api'),
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode(<String, dynamic>{
+        'email': emailController.text,
+        'password': passwordController.text,
+      }),
+    );
+
+    if (res.statusCode != 200) {
+      return null;
+    }
+
+    final data = json.decode(res.body);
+    prefs.setString('emailUser', emailController.text);
+    prefs.setString('password', passwordController.text);
+    prefs.setString(
+        'token', "Bearer ${data['data']['access_token'].toString()}");
+
+    setState(() {
+      emailUsers = emailUsers;
+      passwords = passwords;
+      tokens = tokens;
+      isLoggedIn = true;
+    });
+
+    Navigator.pushAndRemoveUntil(context,
+        MaterialPageRoute(builder: (_) => MainPage()), (route) => false);
+
+    print(data);
+    emailController.clear();
+    passwordController.clear();
+  }
+
   @override
   Widget build(BuildContext context) {
     Widget title() {
@@ -68,6 +178,7 @@ class SignInPage extends StatelessWidget {
                     ),
                     Expanded(
                       child: TextFormField(
+                        controller: emailController,
                         decoration: InputDecoration.collapsed(
                           hintText: 'Masukan Email Anda',
                           hintStyle: primaryTextStyle.copyWith(
@@ -122,6 +233,7 @@ class SignInPage extends StatelessWidget {
                     ),
                     Expanded(
                       child: TextFormField(
+                        controller: passwordController,
                         decoration: InputDecoration.collapsed(
                           hintText: 'Masukan Password Anda',
                           hintStyle: primaryTextStyle.copyWith(
@@ -210,14 +322,24 @@ class SignInPage extends StatelessWidget {
           top: 30,
         ),
         child: TextButton(
-          onPressed: () {},
+          onPressed: () async {
+            // loginUser();
+            isLoggedIn ? Container() : loginUser();
+            isLoggedIn
+                ? Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (_) => MainPage()),
+                    (route) => false)
+                : Navigator.push(
+                    context, MaterialPageRoute(builder: (_) => SignInPage()));
+          },
           style: TextButton.styleFrom(
               backgroundColor: Color(0xFF01122B),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
               )),
           child: Text(
-            "Masuk",
+            "Belum Masuk",
             style: primaryTextStyle.copyWith(
               fontSize: 16,
               fontWeight: semiBold,
