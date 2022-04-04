@@ -1,11 +1,17 @@
-// ignore_for_file: use_key_in_widget_constructors, prefer_const_literals_to_create_immutables, avoid_unnecessary_containers, prefer_const_constructors, sized_box_for_whitespace, deprecated_member_use
+// ignore_for_file: use_key_in_widget_constructors, prefer_const_literals_to_create_immutables, avoid_unnecessary_containers, prefer_const_constructors, sized_box_for_whitespace, deprecated_member_use, unnecessary_string_interpolations
 
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:pusbindiklat_global/cubit/userauth_cubit.dart';
+import 'package:pusbindiklat_global/models/user_login.dart';
 import 'package:pusbindiklat_global/presentation/pages/detail_profile_page.dart';
+import 'package:pusbindiklat_global/presentation/pages/main_page.dart';
 import 'package:pusbindiklat_global/presentation/pages/sign_in_page.dart';
 import 'package:pusbindiklat_global/presentation/pages/statistik_detail.dart';
+import 'package:pusbindiklat_global/providers/auth_provider.dart';
+import 'package:pusbindiklat_global/services/local_storage.dart';
 import 'package:pusbindiklat_global/styles/style.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spider_chart/spider_chart.dart';
@@ -17,84 +23,11 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  SharedPreferences sharedPreferences;
-
-  String emailUsers = '';
-  String passwords = '';
-  String tokens = '';
-  String idUsers = '';
-  bool isLogin = false;
-
-  @override
-  void initState() {
-    super.initState();
-    checkLoginStatus();
-  }
-
-  checkLoginStatus() async {
-    sharedPreferences = await SharedPreferences.getInstance();
-    if (sharedPreferences.getString("token") == null) {
-      Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (BuildContext context) => SignInPage()),
-          (Route<dynamic> route) => false);
-    }
-  }
-
-  Future logOut() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String token = prefs.getString('token');
-
-    var res = await http.post(
-      Uri.parse('http://10.0.2.2:8000/api/logout-api'),
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer $token"
-      },
-    );
-
-    if (res.statusCode != 200) {
-      return null;
-    }
-
-    final data = json.decode(res.body);
-
-    // prefs.remove('emailUser');
-    // prefs.remove('password');
-    // prefs.remove('token');
-    // prefs.remove('idUser');
-
-    isLogin = false;
-    emailUsers = '';
-    passwords = '';
-    tokens = '';
-    // idUsers = '';
-
-    setState(() {
-      prefs.clear();
-      prefs.commit();
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (BuildContext context) => SignInPage()),
-      );
-    });
-
-    print(data);
-    return data;
-  }
-
-  // @override
-  // void initState() async {
-  //   // TODO: implement initState
-  //   super.initState();
-  //   final SharedPreferences pref = await SharedPreferences.getInstance();
-  //   pref.getString('emailUser');
-  //   pref.getString('password');
-  //   pref.getString('token');
-  //   pref.getString('idUser');
-  // }
-
   @override
   Widget build(BuildContext context) {
-    String saveText = "";
+    // AuthProvider authProvider = Provider.of<AuthProvider>(context);
+    // User user = authProvider.user;
+    String saveText = '';
 
     const ticks = [
       100.0,
@@ -111,13 +44,25 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
+        automaticallyImplyLeading: false,
+        iconTheme: IconThemeData(color: Colors.black),
         title: Row(
-          // mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Image.asset(
               'assets/logo_ts_bulat.png',
               width: 50,
             ),
+            SizedBox(
+              width: 10,
+            ),
+            Text(
+              "Pusbindiklat",
+              style: primaryTextStyle.copyWith(
+                fontWeight: bold,
+              ),
+            )
           ],
         ),
         toolbarHeight: 70,
@@ -125,11 +70,11 @@ class _HomePageState extends State<HomePage> {
           IconButton(
             onPressed: () async {
               setState(() {
-                // sharedPreferences.clear();
-                // sharedPreferences.commit();
-
-                // sharedPreferences.clear();
-                logOut();
+                // authProvider.logOut();
+                context.read<UserauthCubit>().signOut();
+                Navigator.pushReplacement(
+                    context, MaterialPageRoute(builder: (_) => SignInPage()));
+                print("Berhasil Keluar");
               });
             },
             icon: Icon(
@@ -190,22 +135,24 @@ class _HomePageState extends State<HomePage> {
             // ignore: deprecated_member_use
             RaisedButton(
               onPressed: () async {
-                SharedPreferences getPref =
-                    await SharedPreferences.getInstance();
-                String val = getPref.getString("token");
+                String val = await SecureStorage.getUid();
                 print(val);
                 setState(() {
                   saveText = val;
                 });
               },
-              child: Text("Load DAta"),
-            ),
-            Text(
-              saveText,
-              style: TextStyle(
-                color: Colors.black,
+              child: Text(
+                "load data",
+                style: TextStyle(color: Colors.black),
               ),
             ),
+
+            // Text(
+            //   saveText,
+            //   style: TextStyle(
+            //     color: Colors.black,
+            //   ),
+            // ),
             GestureDetector(
               onTap: () {
                 Navigator.push(context,
@@ -248,7 +195,7 @@ class _HomePageState extends State<HomePage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "Eko Budiarto",
+                            "{user.namaLengkap}",
                             style: primaryTextStyle.copyWith(
                               fontSize: 18,
                               fontWeight: bold,

@@ -1,22 +1,30 @@
 // ignore_for_file: prefer_const_constructors, use_key_in_widget_constructors
 
 import 'package:flutter/material.dart';
-import 'package:pusbindiklat_global/presentation/pages/main_page.dart';
-import 'package:pusbindiklat_global/presentation/pages/sign_in_page.dart';
-import 'package:pusbindiklat_global/presentation/pages/testpage.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
+import 'package:pusbindiklat_global/cubit/userauth_cubit.dart';
+
+import 'package:pusbindiklat_global/presentation/pages/splash_screen.dart';
 
 void main() {
   runApp(MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
+
   // SharedPreferences.setMockInitialValues({});
 }
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: SignInPage(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => UserauthCubit()),
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: SplashScreen(),
+      ),
     );
   }
 }

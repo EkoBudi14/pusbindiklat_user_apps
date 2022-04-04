@@ -3,8 +3,15 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:pusbindiklat_global/presentation/pages/home_page.dart';
+import 'package:provider/provider.dart';
+import 'package:pusbindiklat_global/cubit/userauth_cubit.dart';
+import 'package:pusbindiklat_global/models/user_login.dart';
+import 'package:pusbindiklat_global/presentation/pages/home/home_page.dart';
 import 'package:pusbindiklat_global/presentation/pages/main_page.dart';
+import 'package:pusbindiklat_global/presentation/pages/sign_up_page.dart';
+import 'package:pusbindiklat_global/providers/auth_provider.dart';
+import 'package:pusbindiklat_global/services/auth_services.dart';
+import 'package:pusbindiklat_global/services/local_storage.dart';
 import 'package:pusbindiklat_global/styles/style.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -15,107 +22,48 @@ class SignInPage extends StatefulWidget {
 }
 
 class _SignInPageState extends State<SignInPage> {
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
-  String emailUsers = '';
-  String passwords = '';
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+
   String tokens = '';
-  String idUsers = '';
 
   bool isLoggedIn = false;
-
-  @override
-  void initState() {
-    super.initState();
-    autoLogIn();
-  }
-
-  void autoLogIn() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String emailUser = prefs.getString('emailUser');
-    final String password = prefs.getString('password');
-    final String token = prefs.getString('token');
-
-    if (emailUser != null && password != null && token != null) {
-      setState(() {
-        isLoggedIn = true;
-        emailUsers = emailUser;
-        passwords = password;
-        tokens = token;
-      });
-      Navigator.push(context, MaterialPageRoute(builder: (_) => MainPage()));
-      return;
-    }
-  }
-
-  Future<Null> logout() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    var res = await http.post(
-      Uri.parse('http://10.0.2.2:8000/api/logout-api'),
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer ${prefs.getString('token')}"
-      },
-    );
-
-    if (res.statusCode != 200) {
-      return null;
-    }
-
-    final data = json.decode(res.body);
-
-    prefs.setString('emailUser', '');
-    prefs.setString('password', '');
-    prefs.setString('token', '');
-
-    setState(() {
-      emailUsers = '';
-      passwords = '';
-      tokens = '';
-      isLoggedIn = false;
-    });
-    print(data);
-    return data;
-  }
-
-  Future<Null> loginUser() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    var res = await http.post(
-      Uri.parse('http://10.0.2.2:8000/api/login-api'),
-      headers: {"Content-Type": "application/json"},
-      body: jsonEncode(<String, dynamic>{
-        'email': emailController.text,
-        'password': passwordController.text,
-      }),
-    );
-
-    if (res.statusCode != 200) {
-      return null;
-    }
-
-    final data = json.decode(res.body);
-    prefs.setString('emailUser', emailController.text);
-    prefs.setString('password', passwordController.text);
-    prefs.setString(
-        'token', "Bearer ${data['data']['access_token'].toString()}");
-
-    setState(() {
-      emailUsers = emailUsers;
-      passwords = passwords;
-      tokens = tokens;
-      isLoggedIn = true;
-    });
-
-    Navigator.pushAndRemoveUntil(context,
-        MaterialPageRoute(builder: (_) => MainPage()), (route) => false);
-
-    print(data);
-    emailController.clear();
-    passwordController.clear();
-  }
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
+    // AuthProvider authProvider = Provider.of<AuthProvider>(context);
+
+    // void login() async {
+    //   setState(() {
+    //     isLoading = true;
+    //   });
+
+    //   if (await authProvider.login(
+    //     emailController.text,
+    //     passwordController.text,
+    //   )) {
+    //     Navigator.pushReplacement(
+    //       context,
+    //       MaterialPageRoute(builder: (_) => MainPage()),
+    //     );
+    //   } else {
+    //     ScaffoldMessenger.of(context).showSnackBar(
+    //       SnackBar(
+    //         backgroundColor: Colors.red,
+    //         content: Text(
+    //           'Gagal Login!',
+    //           textAlign: TextAlign.center,
+    //         ),
+    //       ),
+    //     );
+    //   }
+
+    //   setState(() {
+    //     isLoading = false;
+    //   });
+    // }
+
     Widget title() {
       return Container(
         margin: EdgeInsets.only(
@@ -296,8 +244,8 @@ class _SignInPageState extends State<SignInPage> {
         // ignore: deprecated_member_use
         child: OutlineButton(
           onPressed: () {
-            // Navigator.push(
-            //     context, MaterialPageRoute(builder: (context) => SignUpPage()));
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => SignUpPage()));
           },
           borderSide: BorderSide(color: Color(0xFF01122B), width: 2),
           shape:
@@ -323,15 +271,22 @@ class _SignInPageState extends State<SignInPage> {
         ),
         child: TextButton(
           onPressed: () async {
-            // loginUser();
-            isLoggedIn ? Container() : loginUser();
-            isLoggedIn
-                ? Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(builder: (_) => MainPage()),
-                    (route) => false)
-                : Navigator.push(
-                    context, MaterialPageRoute(builder: (_) => SignInPage()));
+            setState(() {
+              isLoading = true;
+            });
+
+            await context
+                .read<UserauthCubit>()
+                .signIn(emailController.text, passwordController.text);
+
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (_) => MainPage()),
+            );
+
+            setState(() {
+              isLoading = false;
+            });
           },
           style: TextButton.styleFrom(
               backgroundColor: Color(0xFF01122B),
@@ -339,7 +294,7 @@ class _SignInPageState extends State<SignInPage> {
                 borderRadius: BorderRadius.circular(12),
               )),
           child: Text(
-            "Belum Masuk",
+            "Masuk",
             style: primaryTextStyle.copyWith(
               fontSize: 16,
               fontWeight: semiBold,
