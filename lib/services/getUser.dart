@@ -1,14 +1,17 @@
 import 'dart:convert';
 
+import 'package:pusbindiklat_global/models/api_return_value.dart';
 import 'package:pusbindiklat_global/models/get_user.dart';
 import 'package:http/http.dart' as http;
 import 'package:pusbindiklat_global/models/user_login.dart';
+import 'package:pusbindiklat_global/services/local_storage.dart';
 
 class GetUserTs {
-  Future<List<Getuser>> getUser() async {
+  static Future<ApiReturnValue<Data>> getUser() async {
+    String idUsers = await SecureStorage.getUid();
     try {
       var res = await http.get(
-        Uri.parse("http://tssabes.my.id/api/users"),
+        Uri.parse("http://tssabes.my.id/api/users/${User.id}"),
         headers: {
           "Content-Type": "application/json",
           "Authorization": "Bearer ${User.token}"
@@ -19,15 +22,14 @@ class GetUserTs {
       if (res.statusCode != 200) {
         return null;
       }
+      var data = jsonDecode(res.body)['data'];
 
-      List data = jsonDecode(res.body)['0'];
+      // var data = jsonDecode(res.body);
+      Data value = Data.fromJson(data);
+      // String users = data['user'];
+      print(data);
 
-      List<Getuser> getUserTsPus = [];
-      for (var item in data) {
-        getUserTsPus.add(Getuser.fromJson(item));
-      }
-
-      return getUserTsPus;
+      return ApiReturnValue(value: value);
     } catch (e) {
       return null;
     }

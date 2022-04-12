@@ -4,12 +4,13 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:pusbindiklat_global/cubit/getuser_cubit.dart';
 import 'package:pusbindiklat_global/cubit/userauth_cubit.dart';
 import 'package:pusbindiklat_global/models/user_login.dart';
 import 'package:pusbindiklat_global/presentation/pages/home/home_page.dart';
 import 'package:pusbindiklat_global/presentation/pages/main_page.dart';
 import 'package:pusbindiklat_global/presentation/pages/sign_up_page.dart';
-import 'package:pusbindiklat_global/providers/auth_provider.dart';
+import 'package:pusbindiklat_global/presentation/pages/splash_screen.dart';
 import 'package:pusbindiklat_global/services/auth_services.dart';
 import 'package:pusbindiklat_global/services/local_storage.dart';
 import 'package:pusbindiklat_global/styles/style.dart';
@@ -278,6 +279,7 @@ class _SignInPageState extends State<SignInPage> {
             await context
                 .read<UserauthCubit>()
                 .signIn(emailController.text, passwordController.text);
+            context.read<GetuserCubit>().getUsers();
 
             Navigator.pushReplacement(
               context,

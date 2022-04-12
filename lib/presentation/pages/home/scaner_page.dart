@@ -38,6 +38,7 @@ class _ScannerPageState extends State<ScannerPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Text(
           "Scaning",
           style: primaryTextStyle.copyWith(

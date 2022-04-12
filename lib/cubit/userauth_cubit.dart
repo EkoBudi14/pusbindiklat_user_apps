@@ -13,7 +13,7 @@ class UserauthCubit extends Cubit<UserauthState> {
     ApiReturnValue<User> result = await AuthServices.signIn(email, password);
 
     if (result.value != null) {
-      emit(Userloaded(result.value));
+      emit(Userloaded(user: result.value));
     } else {
       emit(UserLoadingFailed(result.message));
     }
@@ -23,7 +23,7 @@ class UserauthCubit extends Cubit<UserauthState> {
     ApiReturnValue<User> result = await AuthServices.signUpUser(user, password);
 
     if (result.value != null) {
-      emit(Userloaded(result.value));
+      emit(Userloaded(user: result.value));
     } else {
       emit(UserLoadingFailed(result.message));
     }

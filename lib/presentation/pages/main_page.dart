@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:pusbindiklat_global/presentation/pages/home/date_page.dart';
+import 'package:pusbindiklat_global/presentation/pages/home/event_page.dart';
 import 'package:pusbindiklat_global/presentation/pages/home/home_page.dart';
 import 'package:pusbindiklat_global/presentation/pages/home/scaner_page.dart';
 import 'package:pusbindiklat_global/presentation/pages/sign_in_page.dart';
@@ -50,7 +51,7 @@ class _MainPageState extends State<MainPage>
         children: <Widget>[
           HomePage(),
           ScannerPage(),
-          DatePage(),
+          EventPage(),
         ],
         // If you want to disable swiping in tab the use below code
         // physics: NeverScrollableScrollPhysics(),

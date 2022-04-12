@@ -1,19 +1,19 @@
 // ignore_for_file: use_key_in_widget_constructors, prefer_const_constructors, sized_box_for_whitespace, prefer_const_literals_to_create_immutables, avoid_unnecessary_containers
 
 import 'package:flutter/material.dart';
+import 'package:pusbindiklat_global/models/statistic.dart';
 import 'package:pusbindiklat_global/styles/style.dart';
 import 'package:spider_chart/spider_chart.dart';
 
 class StatistikDetail extends StatelessWidget {
+  final Statistic stats;
+  StatistikDetail({this.stats});
   @override
   Widget build(BuildContext context) {
-    const ticks = [
-      100.0,
-      90.0,
-      80.0,
-      70.0,
-      60.0,
-      50.0,
+    var ticks = [
+      stats.strength.toDouble(),
+      stats.agility.toDouble(),
+      stats.power.toDouble(),
     ];
     return Scaffold(
       appBar: AppBar(
@@ -49,9 +49,6 @@ class StatistikDetail extends StatelessWidget {
                       Colors.red,
                       Colors.green,
                       Colors.blue,
-                      Colors.yellow,
-                      Colors.indigo,
-                      Colors.black,
                     ],
                   ),
                 ),

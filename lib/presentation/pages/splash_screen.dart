@@ -4,15 +4,16 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:pusbindiklat_global/cubit/getuser_cubit.dart';
 import 'package:pusbindiklat_global/cubit/userauth_cubit.dart';
 import 'package:pusbindiklat_global/presentation/pages/main_page.dart';
 import 'package:pusbindiklat_global/presentation/pages/sign_in_page.dart';
-import 'package:pusbindiklat_global/providers/auth_provider.dart';
 import 'package:pusbindiklat_global/services/local_storage.dart';
 
 String finalEmail;
 String finalPassword;
 String finalToken;
+String finalUid;
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -24,6 +25,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    // context.read<GetuserCubit>().getUsers();
     Timer(
       Duration(seconds: 5),
       () => loginAuto(),
@@ -34,12 +36,15 @@ class _SplashScreenState extends State<SplashScreen> {
     finalEmail = await SecureStorage.getEmail();
     finalPassword = await SecureStorage.getPassword();
     finalToken = await SecureStorage.getToken();
+    finalUid = await SecureStorage.getUid();
     if (finalToken == null) {
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (_) => SignInPage()));
     } else {
       await context.read<UserauthCubit>().signIn(finalEmail, finalPassword);
-      Navigator.push(context, MaterialPageRoute(builder: (_) => MainPage()));
+      context.read<GetuserCubit>().getUsers();
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (_) => MainPage()));
     }
   }
 

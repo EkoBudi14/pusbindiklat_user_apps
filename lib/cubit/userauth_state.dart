@@ -14,7 +14,7 @@ class UserauthInitial extends UserauthState {}
 class Userloaded extends UserauthState {
   final User user;
 
-  Userloaded(this.user);
+  Userloaded({this.user});
   @override
   List<Object> get props => [user];
 }

@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 import 'package:pusbindiklat_global/cubit/userauth_cubit.dart';
 import 'package:pusbindiklat_global/models/user_login.dart';
 import 'package:pusbindiklat_global/presentation/pages/main_page.dart';
-import 'package:pusbindiklat_global/providers/auth_provider.dart';
 import 'package:pusbindiklat_global/styles/style.dart';
 
 class SignUpPage extends StatefulWidget {

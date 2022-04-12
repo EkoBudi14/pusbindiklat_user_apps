@@ -5,7 +5,6 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:pusbindiklat_global/models/api_return_value.dart';
 import 'package:pusbindiklat_global/models/user_login.dart';
-import 'package:pusbindiklat_global/providers/auth_provider.dart';
 import 'package:pusbindiklat_global/services/local_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -114,7 +113,7 @@ class AuthServices {
     var response = await client.post(
       Uri.parse('http://tssabes.my.id/api/register-api'),
       headers: {"Content-Type": "application/json"},
-      body: jsonEncode(<String, String>{
+      body: jsonEncode(<String, dynamic>{
         'email': user.email,
         'password': password,
         'tanggalLahir': user.tanggalLahir,
@@ -128,18 +127,17 @@ class AuthServices {
     }
 
     var data = jsonDecode(response.body);
-    String token = data['data']['access_token'];
-    int id = data['data']['user']['id'];
+    User.token = data['data']['access_token'];
+    User.id = data['data']['user']['id'];
     // String users = data['user'];
-    User.token = token;
-    User.id = id;
 
     User value = User.fromJson(data['data']['user']);
 
     await SecureStorage.setEmail(user.email);
     await SecureStorage.setPassword(password);
-    await SecureStorage.setToken(token);
-    await SecureStorage.setUid(id.toString());
+    await SecureStorage.setToken(User.token);
+    await SecureStorage.setUid(User.id.toString());
+
     print(data);
 
     return ApiReturnValue(value: value);

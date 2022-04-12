@@ -2,32 +2,87 @@
 
 import 'package:equatable/equatable.dart';
 
-class Statistik {
-  double streng;
-  double defense;
-  double agility;
+// class Statistik extends Equatable {
+//   final int userId;
+//   final double strength;
+//   final double power;
+//   final double agility;
 
-  Statistik({
+//   Statistik({
+//     this.userId,
+//     this.agility,
+//     this.power,
+//     this.strength,
+//   });
+
+//   // ignore: missing_return
+//   factory Statistik.fromJson(Map<String, dynamic> json) {
+//     userId:
+//     json['user_id'];
+//     strength:
+//     json['strength'];
+//     agility:
+//     json['agility'];
+//     power:
+//     json['power'];
+//   }
+
+//   Map<String, dynamic> toJson() {
+//     return {
+//       "user_id": userId,
+//       "strength": strength,
+//       "agility": agility,
+//       "power": power,
+//     };
+//   }
+
+//   Statistik copyWith({
+//     int userId,
+//     double strength,
+//     double agility,
+//     double power,
+//   }) =>
+//       Statistik(
+//         userId: userId ?? this.userId,
+//         strength: strength ?? this.strength,
+//         agility: agility ?? this.agility,
+//         power: power ?? this.power,
+//       );
+
+//   @override
+//   // TODO: implement props
+//   List<Object> get props => [
+//         userId,
+//         strength,
+//         agility,
+//         power,
+//       ];
+// }
+
+class Statistic {
+  Statistic({
+    this.userId,
+    this.strength,
     this.agility,
-    this.defense,
-    this.streng,
+    this.power,
   });
 
-  // ignore: missing_return
-  factory Statistik.fromJson(Map<String, dynamic> json) {
-    streng:
-    json['streng'];
-    agility:
-    json['agility'];
-    defense:
-    json['defense'];
-  }
+  int userId;
+  int strength;
+  int agility;
+  int power;
 
-  Map<String, dynamic> toJson() {
-    return {
-      "streng": streng,
-      "agility": agility,
-      "defense": defense,
-    };
-  }
+  factory Statistic.fromJson(Map<String, dynamic> json) => Statistic(
+        userId: json["user_id"],
+        strength: json["strength"],
+        agility: json["agility"],
+        power: json["power"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "user_id": userId,
+        "strength": strength,
+        "agility": agility,
+        "power": power,
+      };
 }

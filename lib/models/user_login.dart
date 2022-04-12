@@ -45,14 +45,20 @@ class User extends Equatable {
     //     .toList();
   }
 
-  Map<String, dynamic> toJson() => {
-        "email": email,
-        "password": password,
-        "tanggalLahir": tanggalLahir,
-        "namaLengkap": namaLengkap,
-        "alamat": alamat,
-        // "id": id,
-      };
+  Map<String, dynamic> toJson() {
+    return {
+      "email": email,
+      "password": password,
+      "tanggalLahir": tanggalLahir,
+      "namaLengkap": namaLengkap,
+      "alamat": alamat,
+      // "id": id,
+    };
+  }
+
+  // @override
+  // // TODO: implement props
+  // List<Object> get props => throw UnimplementedError();
 
   User copyWith({
     int id,
@@ -73,6 +79,11 @@ class User extends Equatable {
 
   @override
   // TODO: implement props
-  List<Object> get props =>
-      [email, password, tanggalLahir, namaLengkap, alamat];
+  List<Object> get props => [
+        email,
+        password,
+        tanggalLahir,
+        namaLengkap,
+        alamat,
+      ];
 }
