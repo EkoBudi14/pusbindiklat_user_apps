@@ -27,7 +27,7 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     // context.read<GetuserCubit>().getUsers();
     Timer(
-      Duration(seconds: 5),
+      Duration(seconds: 3),
       () => loginAuto(),
     );
   }
@@ -38,13 +38,21 @@ class _SplashScreenState extends State<SplashScreen> {
     finalToken = await SecureStorage.getToken();
     finalUid = await SecureStorage.getUid();
     if (finalToken == null) {
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (_) => SignInPage()));
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (_) => SignInPage(),
+          ),
+          (route) => false);
     } else {
       await context.read<UserauthCubit>().signIn(finalEmail, finalPassword);
       context.read<GetuserCubit>().getUsers();
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (_) => MainPage()));
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (_) => MainPage(),
+          ),
+          (route) => false);
     }
   }
 

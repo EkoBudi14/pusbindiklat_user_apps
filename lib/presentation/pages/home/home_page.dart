@@ -1,4 +1,4 @@
-// ignore_for_file: use_key_in_widget_constructors, prefer_const_literals_to_create_immutables, avoid_unnecessary_containers, prefer_const_constructors, sized_box_for_whitespace, deprecated_member_use, unnecessary_string_interpolations, unused_local_variable
+// ignore_for_file: use_key_in_widget_constructors, prefer_const_literals_to_create_immutables, avoid_unnecessary_containers, prefer_const_constructors, sized_box_for_whitespace, deprecated_member_use, unnecessary_string_interpolations, unused_local_variable, avoid_print
 
 import 'dart:convert';
 
@@ -27,23 +27,6 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    Future getData() async {
-      String idUsers = await SecureStorage.getUid();
-
-      var res = await http.get(
-        Uri.parse("http://tssabes.my.id/api/users/$idUsers"),
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": "Bearer ${User.token}"
-        },
-      );
-
-      print(json.decode(res.body));
-      return json.decode(res.body);
-    }
-
-    // AuthProvider authProvider = Provider.of<AuthProvider>(context);
-    // User user = authProvider.user;
     String saveText = '';
 
     return Scaffold(
@@ -142,19 +125,19 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             // ignore: deprecated_member_use
-            RaisedButton(
-              onPressed: () async {
-                String val = await SecureStorage.getUid();
-                print(val);
-                setState(() {
-                  saveText = val;
-                });
-              },
-              child: Text(
-                "load data",
-                style: TextStyle(color: Colors.black),
-              ),
-            ),
+            // RaisedButton(
+            //   onPressed: () async {
+            //     String val = await SecureStorage.getUid();
+            //     print(val);
+            //     setState(() {
+            //       saveText = val;
+            //     });
+            //   },
+            //   child: Text(
+            //     "load data",
+            //     style: TextStyle(color: Colors.black),
+            //   ),
+            // ),
 
             Text(
               saveText,

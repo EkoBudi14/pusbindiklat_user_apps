@@ -11,8 +11,6 @@ import 'package:pusbindiklat_global/presentation/pages/splash_screen.dart';
 void main() {
   runApp(MyApp());
   WidgetsFlutterBinding.ensureInitialized();
-
-  // SharedPreferences.setMockInitialValues({});
 }
 
 class MyApp extends StatelessWidget {
