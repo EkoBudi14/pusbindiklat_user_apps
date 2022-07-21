@@ -1,9 +1,12 @@
 // ignore_for_file: use_key_in_widget_constructors, prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:pusbindiklat_global/models/event.dart';
 import 'package:pusbindiklat_global/styles/style.dart';
 
 class DetailEvent extends StatelessWidget {
+  final Event eventss;
+  DetailEvent({this.eventss});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,7 +42,11 @@ class DetailEvent extends StatelessWidget {
                   minScale: 1,
                   maxScale: 4,
                   child: Image(
-                    image: AssetImage("assets/event_silat.jpeg"),
+                    image: (eventss.image == null)
+                        ? AssetImage(
+                            "assets/event_silat.jpeg",
+                          )
+                        : NetworkImage(eventss.image),
                   ),
                 ),
               ),

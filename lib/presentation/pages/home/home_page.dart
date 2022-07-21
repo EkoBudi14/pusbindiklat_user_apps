@@ -1,19 +1,13 @@
 // ignore_for_file: use_key_in_widget_constructors, prefer_const_literals_to_create_immutables, avoid_unnecessary_containers, prefer_const_constructors, sized_box_for_whitespace, deprecated_member_use, unnecessary_string_interpolations, unused_local_variable, avoid_print
 
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:provider/provider.dart';
 import 'package:pusbindiklat_global/cubit/getuser_cubit.dart';
 import 'package:pusbindiklat_global/cubit/userauth_cubit.dart';
+import 'package:pusbindiklat_global/models/date_time.dart';
+import 'package:pusbindiklat_global/models/get_user.dart';
 import 'package:pusbindiklat_global/models/statistic.dart';
-import 'package:pusbindiklat_global/models/user_login.dart';
-import 'package:pusbindiklat_global/presentation/pages/detail_profile_page.dart';
-import 'package:pusbindiklat_global/presentation/pages/main_page.dart';
 import 'package:pusbindiklat_global/presentation/pages/sign_in_page.dart';
-import 'package:pusbindiklat_global/presentation/pages/statistik_detail.dart';
-import 'package:pusbindiklat_global/services/local_storage.dart';
 import 'package:pusbindiklat_global/styles/style.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spider_chart/spider_chart.dart';
@@ -27,6 +21,254 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
+    // ALERT STATISTIK
+
+    void _showDetailStatistik(Statistic stats) {
+      var ticks = [
+        double.parse(stats.strength),
+        double.parse(stats.agility),
+        double.parse(stats.power),
+      ];
+      showDialog(
+        context: context,
+        builder: (_) {
+          return AlertDialog(
+            actions: [
+              SingleChildScrollView(
+                child: Container(
+                  color: Colors.white,
+                  child: Column(
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(right: 15, top: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.pop(context);
+                              },
+                              child: Text(
+                                "X",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Center(
+                        child: Container(
+                          margin: EdgeInsets.only(top: 30),
+                          width: 100,
+                          height: 190,
+                          child: SpiderChart(
+                            data: ticks,
+                            maxValue:
+                                100, // the maximum value that you want to represent (essentially sets the data scale of the chart)
+                            colors: <Color>[
+                              Colors.red,
+                              Colors.green,
+                              Colors.blue,
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 25,
+                      ),
+                      Center(
+                        child: Column(
+                          children: [
+                            Container(
+                              margin: EdgeInsets.only(bottom: 10),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    width: 18,
+                                    height: 18,
+                                    color: Colors.red,
+                                  ),
+                                  Text(
+                                    " : Strength",
+                                    style: primaryTextStyle.copyWith(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Container(
+                              margin: EdgeInsets.only(bottom: 10),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    width: 18,
+                                    height: 18,
+                                    color: Colors.green,
+                                  ),
+                                  Text(
+                                    " : Agility",
+                                    style: primaryTextStyle.copyWith(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Container(
+                              margin: EdgeInsets.only(bottom: 10),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    width: 18,
+                                    height: 18,
+                                    color: Colors.blue,
+                                  ),
+                                  Text(
+                                    " : Power",
+                                    style: primaryTextStyle.copyWith(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          );
+        },
+      );
+    }
+
+    void _showDetailProfile(Data users) {
+      showDialog(
+        context: context,
+        builder: (_) {
+          return AlertDialog(
+            actions: [
+              Container(
+                width: double.infinity,
+                padding: EdgeInsets.only(
+                  top: 10,
+                  left: 5,
+                  right: 5,
+                  bottom: 20,
+                ),
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(30)),
+                child: SingleChildScrollView(
+                  child: Container(
+                    margin: EdgeInsets.symmetric(horizontal: 10),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.pop(context);
+                              },
+                              child: Text(
+                                "X",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(top: 10, left: 10),
+                          width: 120,
+                          height: 130,
+                          color: Colors.white,
+                          child: Image.asset("assets/programmer.png"),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              margin: EdgeInsets.only(
+                                // left: 50,
+                                top: 17,
+                              ),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    users.namaLengkap,
+                                    style: primaryTextStyle.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 17,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 5,
+                                  ),
+                                  Text(
+                                    DateTimeUtils.formatCharMonthDateTime(
+                                        users.tanggalLahir),
+                                    maxLines: 1,
+                                    style: primaryTextStyle.copyWith(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 15,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 5,
+                                  ),
+                                  Text(
+                                    "Remaja",
+                                    style: primaryTextStyle.copyWith(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 15,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 5,
+                                  ),
+                                  Text(
+                                    "Tanding Dan Seni",
+                                    style: primaryTextStyle.copyWith(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 15,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          );
+        },
+      );
+    }
+
     String saveText = '';
 
     return Scaffold(
@@ -153,12 +395,7 @@ class _HomePageState extends State<HomePage> {
                     var userse = state.getUser;
                     return GestureDetector(
                       onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (_) => DetailProfilePage(
-                                      users: userse,
-                                    )));
+                        _showDetailProfile(userse);
                       },
                       child: Container(
                         padding: EdgeInsets.only(
@@ -175,7 +412,7 @@ class _HomePageState extends State<HomePage> {
                         width: double.infinity,
                         height: 200,
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(30),
+                          borderRadius: BorderRadius.circular(20),
                           color: Color(0xFF01122B),
                           boxShadow: [
                             BoxShadow(
@@ -259,7 +496,7 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             SizedBox(
-              height: 350,
+              height: 330,
               child: BlocBuilder<GetuserCubit, GetuserState>(
                 builder: (context, state) {
                   if (state is GetUserloaded) {
@@ -273,21 +510,14 @@ class _HomePageState extends State<HomePage> {
                           itemBuilder: (_, index) {
                             var stat = userse[index];
                             var ticks = [
-                              stat.power.toDouble(),
-                              stat.agility.toDouble(),
-                              stat.strength.toDouble(),
+                              double.parse(stat.strength),
+                              double.parse(stat.agility),
+                              double.parse(stat.power),
                             ];
 
                             return GestureDetector(
                               onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (_) => StatistikDetail(
-                                      stats: stat,
-                                    ),
-                                  ),
-                                );
+                                _showDetailStatistik(stat);
                               },
                               child: Container(
                                 margin: EdgeInsets.only(
@@ -299,7 +529,7 @@ class _HomePageState extends State<HomePage> {
                                 height: 300,
                                 decoration: BoxDecoration(
                                   color: Colors.white,
-                                  borderRadius: BorderRadius.circular(30),
+                                  borderRadius: BorderRadius.circular(20),
                                   // border: Border.all(color: Color(0xFF01122B), width: 2),
                                   boxShadow: [
                                     BoxShadow(

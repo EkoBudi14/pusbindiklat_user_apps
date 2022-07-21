@@ -1,10 +1,14 @@
 // ignore_for_file: prefer_const_constructors, use_key_in_widget_constructors
 
 import 'package:flutter/material.dart';
+import 'package:pusbindiklat_global/models/date_time.dart';
+import 'package:pusbindiklat_global/models/event.dart';
 import 'package:pusbindiklat_global/presentation/pages/detail_event.dart';
 import 'package:pusbindiklat_global/styles/style.dart';
 
 class EventCard extends StatelessWidget {
+  final Event events;
+  EventCard({this.events});
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -12,13 +16,15 @@ class EventCard extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (_) => DetailEvent(),
+            builder: (_) => DetailEvent(
+              eventss: events,
+            ),
           ),
         );
       },
       child: Container(
-        width: MediaQuery.of(context).size.width / 2 - 30,
-        height: 170,
+        width: 400,
+        height: 200,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(30),
           color: Colors.white,
@@ -35,16 +41,18 @@ class EventCard extends StatelessWidget {
           children: [
             Container(
               width: double.infinity,
-              height: 110,
+              height: 140,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(30),
                   topRight: Radius.circular(30),
                 ),
                 image: DecorationImage(
-                  image: AssetImage(
-                    "assets/event_silat.jpeg",
-                  ),
+                  image: (events.image == null)
+                      ? AssetImage(
+                          "assets/event_silat.jpeg",
+                        )
+                      : NetworkImage(events.image),
                   fit: BoxFit.fill,
                 ),
                 color: Colors.blue,
@@ -54,7 +62,7 @@ class EventCard extends StatelessWidget {
               height: 5,
             ),
             Text(
-              "JAKARTA OPEN",
+              events.name,
               style: primaryTextStyle.copyWith(
                 fontWeight: FontWeight.bold,
               ),
@@ -73,7 +81,7 @@ class EventCard extends StatelessWidget {
                   //   size: 20,
                   // ),
                   Text(
-                    "02-03-2022",
+                    DateTimeUtils.formatCharMonthDateTime(events.dateEvent),
                     style: primaryTextStyle.copyWith(
                       fontWeight: FontWeight.bold,
                       fontSize: 15,

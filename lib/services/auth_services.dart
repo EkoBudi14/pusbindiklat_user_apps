@@ -111,7 +111,7 @@ class AuthServices {
     }
 
     var response = await client.post(
-      Uri.parse('http://tssabes.my.id/api/register-api'),
+      Uri.parse('http://pusbindiklat-gemilang.com/api/register-api'),
       headers: {"Content-Type": "application/json"},
       body: jsonEncode(<String, dynamic>{
         'email': user.email,
@@ -149,7 +149,7 @@ class AuthServices {
     User user;
 
     var response =
-        await client.post(Uri.parse("http://tssabes.my.id/api/login-api"),
+        await client.post(Uri.parse("http://pusbindiklat-gemilang.com/api/login-api"),
             headers: {"Content-Type": "application/json"},
             body: jsonEncode(<String, String>{
               'email': email,
@@ -182,7 +182,7 @@ class AuthServices {
     client ??= http.Client();
 
     var response = await client
-        .post(Uri.parse('http://tssabes.my.id/api/logout-api'), headers: {
+        .post(Uri.parse('http://pusbindiklat-gemilang.com/api/logout-api'), headers: {
       "Content-Type": "application/json",
       "Authorization": "Bearer ${User.token}"
     });

@@ -67,10 +67,10 @@ class Statistic {
     this.power,
   });
 
-  int userId;
-  int strength;
-  int agility;
-  int power;
+  String userId;
+  String strength;
+  String agility;
+  String power;
 
   factory Statistic.fromJson(Map<String, dynamic> json) => Statistic(
         userId: json["user_id"],

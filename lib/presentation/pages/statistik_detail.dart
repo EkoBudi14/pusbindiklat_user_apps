@@ -11,9 +11,9 @@ class StatistikDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var ticks = [
-      stats.strength.toDouble(),
-      stats.agility.toDouble(),
-      stats.power.toDouble(),
+      double.parse(stats.strength),
+      double.parse(stats.agility),
+      double.parse(stats.power),
     ];
     return Scaffold(
       appBar: AppBar(
@@ -70,7 +70,7 @@ class StatistikDetail extends StatelessWidget {
                             color: Colors.red,
                           ),
                           Text(
-                            " : Streng",
+                            " : Strength",
                             style: primaryTextStyle.copyWith(
                               fontSize: 12,
                               fontWeight: FontWeight.bold,
@@ -87,10 +87,10 @@ class StatistikDetail extends StatelessWidget {
                           Container(
                             width: 18,
                             height: 18,
-                            color: Colors.red,
+                            color: Colors.green,
                           ),
                           Text(
-                            " : Streng",
+                            " : Agility",
                             style: primaryTextStyle.copyWith(
                               fontSize: 12,
                               fontWeight: FontWeight.bold,
@@ -107,70 +107,10 @@ class StatistikDetail extends StatelessWidget {
                           Container(
                             width: 18,
                             height: 18,
-                            color: Colors.red,
+                            color: Colors.blue,
                           ),
                           Text(
-                            " : Streng",
-                            style: primaryTextStyle.copyWith(
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(bottom: 10),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            width: 18,
-                            height: 18,
-                            color: Colors.red,
-                          ),
-                          Text(
-                            " : Streng",
-                            style: primaryTextStyle.copyWith(
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(bottom: 10),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            width: 18,
-                            height: 18,
-                            color: Colors.red,
-                          ),
-                          Text(
-                            " : Streng",
-                            style: primaryTextStyle.copyWith(
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(bottom: 10),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            width: 18,
-                            height: 18,
-                            color: Colors.red,
-                          ),
-                          Text(
-                            " : Streng",
+                            " : Power",
                             style: primaryTextStyle.copyWith(
                               fontSize: 12,
                               fontWeight: FontWeight.bold,

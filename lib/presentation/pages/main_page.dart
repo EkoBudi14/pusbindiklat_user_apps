@@ -4,6 +4,8 @@ import 'package:floating_bottom_navigation_bar/floating_bottom_navigation_bar.da
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pusbindiklat_global/cubit/getevent_cubit.dart';
 import 'package:pusbindiklat_global/presentation/pages/home/date_page.dart';
 import 'package:pusbindiklat_global/presentation/pages/home/event_page.dart';
 import 'package:pusbindiklat_global/presentation/pages/home/home_page.dart';
@@ -28,6 +30,7 @@ class _MainPageState extends State<MainPage>
   void initState() {
     super.initState();
     // checkLoginStatus();
+    // BlocProvider.of<GeteventCubit>(context).getEvent();
 
     _tabController = TabController(length: 3, vsync: this);
   }
@@ -63,7 +66,7 @@ class _MainPageState extends State<MainPage>
         padding: EdgeInsets.only(top: 18, bottom: 10, left: 20, right: 20),
         child: ClipRRect(
           borderRadius: BorderRadius.all(
-            Radius.circular(50.0),
+            Radius.circular(20),
           ),
           child: Container(
             color: Color(0xFF01122B),

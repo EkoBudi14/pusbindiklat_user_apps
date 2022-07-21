@@ -4,6 +4,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:pusbindiklat_global/cubit/getevent_cubit.dart';
 import 'package:pusbindiklat_global/cubit/getuser_cubit.dart';
 import 'package:pusbindiklat_global/cubit/userauth_cubit.dart';
 import 'package:pusbindiklat_global/presentation/pages/main_page.dart';
@@ -27,7 +28,7 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     // context.read<GetuserCubit>().getUsers();
     Timer(
-      Duration(seconds: 3),
+      Duration(seconds: 2),
       () => loginAuto(),
     );
   }
@@ -47,6 +48,7 @@ class _SplashScreenState extends State<SplashScreen> {
     } else {
       await context.read<UserauthCubit>().signIn(finalEmail, finalPassword);
       context.read<GetuserCubit>().getUsers();
+      // context.read<GeteventCubit>().getEvent();
       Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(

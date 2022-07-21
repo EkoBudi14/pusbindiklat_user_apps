@@ -8,10 +8,10 @@ import 'package:pusbindiklat_global/services/local_storage.dart';
 
 class GetUserTs {
   static Future<ApiReturnValue<Data>> getUser() async {
-    String idUsers = await SecureStorage.getUid();
+    // String idUsers = await SecureStorage.getUid();
     try {
       var res = await http.get(
-        Uri.parse("http://tssabes.my.id/api/users/${User.id}"),
+        Uri.parse("http://pusbindiklat-gemilang.com/api/users/${User.id}"),
         headers: {
           "Content-Type": "application/json",
           "Authorization": "Bearer ${User.token}"
